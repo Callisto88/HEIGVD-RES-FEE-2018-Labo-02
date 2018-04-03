@@ -10,7 +10,7 @@ import org.junit.rules.ExpectedException;
  *
  * @author Olivier Liechti
  */
-public class RouletteV2WasadigiTest {
+public class RouletteV2Callisto88Test {
 
   @Rule
   public ExpectedException exception = ExpectedException.none();
