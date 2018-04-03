@@ -4,6 +4,7 @@ import ch.heigvd.res.labs.roulette.data.EmptyStoreException;
 import ch.heigvd.res.labs.roulette.data.Student;
 import java.io.IOException;
 import java.util.List;
+import sun.security.ssl.ProtocolVersion;
 
 /**
  *
@@ -76,5 +77,5 @@ public interface IRouletteV1Client {
    * @throws IOException 
    */
   public String getProtocolVersion() throws IOException;
-
+       
 }

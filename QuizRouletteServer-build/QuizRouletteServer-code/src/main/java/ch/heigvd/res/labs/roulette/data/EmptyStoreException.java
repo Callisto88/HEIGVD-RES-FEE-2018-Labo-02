@@ -7,5 +7,5 @@ package ch.heigvd.res.labs.roulette.data;
  * @author Olivier Liechti
  */
 public class EmptyStoreException extends Exception {
-
+   
 }
