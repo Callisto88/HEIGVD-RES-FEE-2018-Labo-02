@@ -36,7 +36,7 @@ public class RouletteV1WasadigiTest {
   }
 
   @Test
-  @TestAuthor(githubId = "Callist88")
+  @TestAuthor(githubId = "Callisto88")
   public void clientShouldBeAbleToLoadStudent() throws IOException {
     int port = roulettePair.getServer().getPort();
     IRouletteV1Client client = new RouletteV1ClientImpl();
