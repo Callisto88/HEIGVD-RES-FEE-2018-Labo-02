@@ -21,7 +21,7 @@ public class RouletteV1Protocol {
 
   public final static String RESPONSE_LOAD_START = "Send your data [end with ENDOFDATA]";
   public final static String RESPONSE_LOAD_DONE = "DATA LOADED";
-
+  
   public final static String[] SUPPORTED_COMMANDS = new String[]{CMD_HELP, CMD_RANDOM, CMD_LOAD, CMD_INFO, CMD_BYE};
 
 }
