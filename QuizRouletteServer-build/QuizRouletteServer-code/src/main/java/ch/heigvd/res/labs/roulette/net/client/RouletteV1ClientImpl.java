@@ -35,14 +35,11 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     private static final Logger LOG = Logger.getLogger(RouletteV1ClientImpl.class.getName());
 
-    private Socket sock;
-    private InputStream input;
-    private OutputStream output;
+    protected Socket sock;
+    protected InputStream input;
+    protected OutputStream output;
     private String version;
     private final int BUFFER_SIZE = 1024;
-    
-    //private List<Student> students = new ArrayList<>();
-    //private Array<Student> ls = new Array<>();
 
     public RouletteV1ClientImpl() {
         sock = new Socket();
@@ -50,169 +47,175 @@ public class RouletteV1ClientImpl implements IRouletteV1Client {
 
     }
 
+    /* Methode pour créer une connection client-serveur */
     @Override
     public void connect(String server, int port) throws IOException {
         try {
 
+            /* Création du socket */
             SocketAddress sa = new InetSocketAddress(server, port);
             sock.connect(sa);
 
             input = sock.getInputStream();
             output = sock.getOutputStream();
-            
+
             ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
             byte[] buffer = new byte[BUFFER_SIZE];
-            //responseBuffer.reset();
+
             int newBytes = input.read(buffer);
-            
+
             responseBuffer.write(buffer, 0, newBytes);
-            //System.out.println(responseBuffer.toString());
-            //responseBuffer.toString().replace("\n", "").replace("\r", "");
-//            responseBuffer.flush();
-            
-            
+
         } catch (IOException io) {
             io.printStackTrace();
         }
-
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /* Methode pour arrêter la connection client-serveur */
     @Override
     public void disconnect() throws IOException {
         try {
+            /* Envoie la commande de la requête */
             output.write((RouletteV1Protocol.CMD_BYE + "\n").getBytes());
             //output.flush();
             sock.close();
         } catch (IOException io) {
             io.printStackTrace();
         }
-
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /* Méthode pour savoir si la connection client-serveur est encore up */
     @Override
     public boolean isConnected() {
         return sock.isConnected();
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /* Méthode pour stocker un étudient dans la liste du serveur */
     @Override
     public void loadStudent(String fullname) throws IOException {
         try {
-            //output.flush();
+            /* Envoie la commande de la requête */
             output.write((RouletteV1Protocol.CMD_LOAD + "\n").getBytes());
-            //output.flush();
+            /* Ajoute l'étudient dans le serveur */
             output.write((fullname + "\n").getBytes());
-            //output.flush();
+            /* Envoie la commande du message de fin de l'ajout */
             output.write((RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER + "\n").getBytes());
-            //output.flush();
-            
+
+            /* Bloque pour vide le buffer du message du serveur */
             ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
             byte[] buffer = new byte[BUFFER_SIZE];
             int newBytes = input.read(buffer);
-            //input.reset();
-            
+
             responseBuffer.write(buffer, 0, newBytes);
-            
+
             System.out.println(responseBuffer.toString());
-            
+
             responseBuffer = new ByteArrayOutputStream();
             buffer = new byte[BUFFER_SIZE];
             newBytes = input.read(buffer);
-            //input.reset();
-            
+
             responseBuffer.write(buffer, 0, newBytes);
-            
+
             System.out.println(responseBuffer.toString());
-            
+
         } catch (IOException io) {
             io.printStackTrace();
         }
-
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /* Méthode pour stocker une liste d'étudients pour la liste du serveur */
     @Override
     public void loadStudents(List<Student> students) throws IOException {
-        try{
+        try {
+
+            /* Envoie la commande de la requête */
             output.write((RouletteV1Protocol.CMD_LOAD + "\n").getBytes());
-            //output.flush();
-            for(Student s : students){
+
+            /* Vide le buffer du message de retour du serveur */
+            BufferedReader br = new BufferedReader(new InputStreamReader(input));
+            String reponse = br.readLine();
+
+            /* Ajoute la liste des étudiants */
+            for (Student s : students) {
                 output.write((s.getFullname() + "\n").getBytes());
-                //output.flush();
             }
+
+            /* Envoie la commande du message de fin de l'ajout */
             output.write((RouletteV1Protocol.CMD_LOAD_ENDOFDATA_MARKER + "\n").getBytes());
-             
-        }catch(IOException io){
+
+        } catch (IOException io) {
             io.printStackTrace();
         }
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /* Méthode qui retourne un étudient au hasard stocké dans la liste des étudients du serveur */
     @Override
     public Student pickRandomStudent() throws EmptyStoreException, IOException {
+
+        /* Envoie la commande de la requête */
         output.write((RouletteV1Protocol.CMD_RANDOM + "\n").getBytes());
-        //output.flush();
+
+        /* Bloque pour vide le buffer du message du serveur */
         ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
         byte[] buffer = new byte[BUFFER_SIZE];
         int newBytes = input.read(buffer);
-           
+
         responseBuffer.write(buffer, 0, newBytes);
-        //System.out.println(responseBuffer.toString());
-        
+
+        /* Parse la réponse du serveur */
         RandomCommandResponse rcr = JsonObjectMapper.parseJson(responseBuffer.toString(), RandomCommandResponse.class);
-        //responseBuffer.flush();
-        
-        if(rcr.getError()!= null){
+
+        if (rcr.getError() != null) {
             throw new EmptyStoreException();
         }
-        
+
         return new Student(rcr.getFullname());
     }
 
+    /* Méthode qui retourne le nombre d'étudients stockés dans la liste du serveur */
     @Override
     public int getNumberOfStudents() throws IOException {
         int numberOfStudents = 0;
-        try{  
+        try {
+            /* Envoie la commande de la requête */
             output.write((RouletteV1Protocol.CMD_INFO + "\n").getBytes());
-            //output.flush();
-            
+
+            /* Bloque pour vide le buffer du message du serveur */
             ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
             byte[] buffer = new byte[BUFFER_SIZE];
             int newBytes = input.read(buffer);
 
             responseBuffer.write(buffer, 0, newBytes);
+            /* Parse la réponse du serveur */
             InfoCommandResponse icr = JsonObjectMapper.parseJson(responseBuffer.toString(), InfoCommandResponse.class);
-            //responseBuffer.flush();
-            
-            //System.out.println(icr.getNumberOfStudents());
 
             numberOfStudents = icr.getNumberOfStudents();
-   
-        }catch(IOException io){
+
+        } catch (IOException io) {
             io.printStackTrace();
-        }
-        
-        finally{
+        } finally {
             return numberOfStudents;
         }
     }
 
+    /* Méthode qui retourne la version du protocole du serveur */
     @Override
     public String getProtocolVersion() throws IOException {
-        
+
         String version;
 
+        /* Envoie la commande de la requête */
         output.write((RouletteV1Protocol.CMD_INFO + "\n").getBytes());
-        //output.flush();
+
+        /* Bloque pour vide le buffer du message du serveur */
         ByteArrayOutputStream responseBuffer = new ByteArrayOutputStream();
         byte[] buffer = new byte[BUFFER_SIZE];
         int newBytes = input.read(buffer);
-        
+
         responseBuffer.write(buffer, 0, newBytes);
+
+        /* Parse la réponse du serveur */
         InfoCommandResponse icr = JsonObjectMapper.parseJson(responseBuffer.toString(), InfoCommandResponse.class);
-        //responseBuffer.flush();
 
         version = icr.getProtocolVersion();
         return version;
