@@ -60,9 +60,17 @@ public class RouletteV2Callisto88Test {
   @Test
   @TestAuthor(githubId = "Callisto88")
   public void testDefaultPortNumber() throws IOException {
+<<<<<<< HEAD
       int port = roulettePair.getServer().getPort();
+=======
+      int port = RouletteV2Protocol.DEFAULT_PORT;
+>>>>>>> fc43491ce96121f1607e5425a65e36b747f5f24b
       
       assertEquals(2613, port);
   }
           
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> fc43491ce96121f1607e5425a65e36b747f5f24b
