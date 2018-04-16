@@ -22,55 +22,46 @@ import org.junit.rules.ExpectedException;
  */
 public class RouletteV2Callisto88Test {
 
-  @Rule
-  public ExpectedException exception = ExpectedException.none();
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
-  @Rule
-  public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
+    @Rule
+    public EphemeralClientServerPair roulettePair = new EphemeralClientServerPair(RouletteV2Protocol.VERSION);
 
 
-  @Test
-  @TestAuthor(githubId = "Callisto88")
-  public void theServerShouldClearDataStore() throws IOException {
-    int port = roulettePair.getServer().getPort();
-    IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
-    client.connect("localhost", port);
-    client.clearDataStore();
-    assertEquals(0, client.getNumberOfStudents());
-  }
-  
-  @Test
-  @TestAuthor(githubId = "Callisto88")
-  public void theServerShouldReturnTheListOfStudents() throws IOException {
-      int port = roulettePair.getServer().getPort();
-      
-      IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
-      client.connect("localhost", port);
-      List<Student> listOfStudents = client.listStudents();
-      
-      if(!listOfStudents.isEmpty()){
-          for(Student s : listOfStudents){
-              s.getFullname();
-          }
-      }else{
-          System.out.println("La liste est vide.");
-      }
-  }
-  
-  @Test
-  @TestAuthor(githubId = "Callisto88")
-  public void testDefaultPortNumber() throws IOException {
-<<<<<<< HEAD
-      int port = roulettePair.getServer().getPort();
-=======
-      int port = RouletteV2Protocol.DEFAULT_PORT;
->>>>>>> fc43491ce96121f1607e5425a65e36b747f5f24b
-      
-      assertEquals(2613, port);
-  }
-          
-<<<<<<< HEAD
+    @Test
+    @TestAuthor(githubId = "Callisto88")
+    public void theServerShouldClearDataStore() throws IOException {
+        int port = roulettePair.getServer().getPort();
+        IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
+        client.connect("localhost", port);
+        client.clearDataStore();
+        assertEquals(0, client.getNumberOfStudents());
+    }
+
+    @Test
+    @TestAuthor(githubId = "Callisto88")
+    public void theServerShouldReturnTheListOfStudents() throws IOException {
+        int port = roulettePair.getServer().getPort();
+
+        IRouletteV2Client client = (IRouletteV2Client) roulettePair.getClient();
+        client.connect("localhost", port);
+        List<Student> listOfStudents = client.listStudents();
+
+        if (!listOfStudents.isEmpty()) {
+            for (Student s : listOfStudents) {
+                s.getFullname();
+            }
+        } else {
+            System.out.println("La liste est vide.");
+        }
+    }
+
+    @Test
+    @TestAuthor(githubId = "Callisto88")
+    public void testDefaultPortNumber() throws IOException {
+        // int port = roulettePair.getServer().getPort();
+        int port = RouletteV2Protocol.DEFAULT_PORT;
+        assertEquals(2613, port);
+    }
 }
-=======
-}
->>>>>>> fc43491ce96121f1607e5425a65e36b747f5f24b
