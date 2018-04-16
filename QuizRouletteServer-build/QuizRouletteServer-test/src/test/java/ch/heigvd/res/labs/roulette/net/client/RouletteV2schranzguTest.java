@@ -77,7 +77,7 @@ public class RouletteV2schranzguTest {
   @Test
   @TestAuthor(githubId = "leonardfavre")
   public void theDefaultPortShouldBeCorrect() throws IOException {
-    assertEquals(RouletteV2Protocol.DEFAULT_PORT, roulettePair2.getServer().getPort());
+    assertEquals(2613, RouletteV2Protocol.DEFAULT_PORT);
   }
 
   @Test
