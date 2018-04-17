@@ -16,4 +16,6 @@ public class RouletteV2Protocol extends RouletteV1Protocol {
 
   public final static String[] SUPPORTED_COMMANDS = new String[]{CMD_HELP, CMD_RANDOM, CMD_LOAD, CMD_INFO, CMD_BYE, CMD_CLEAR, CMD_LIST};
 
+  public final static int DEFAULT_PORT = 2613;
+
 }
